@@ -13,39 +13,48 @@ endfunction
 
 function! notify_changed#command(args) abort
   let bufnr = bufnr('')
-  let watched = v:false
-  let unwatched = v:false
-  if !has_key(s:watching, bufnr)
-    let watched = v:true
-    call s:watch(bufnr, win_getid(), 3000)
-  endif
-  let info = s:watching[bufnr]
+  let action = 'watch'
+  let opt = {'switch': v:false, 'period': 3000}
   for arg in a:args
     if arg ==# '-switch'
-      let info.switch = v:true
+      let opt.switch = v:true
     elseif arg ==# '-no-switch'
-      let info.switch = v:false
+      let opt.switch = v:false
     elseif arg ==# '-unwatch'
-      let unwatched = v:true
-      call s:unwatch(bufnr)
+      let action = 'unwatch'
     endif
   endfor
-  if !watched && !unwatched
+  let action = action ==# 'watch' && has_key(s:watching, bufnr) ? 'update' : action
+  if action ==# 'watch'
+    call s:watch(bufnr, win_getid(), opt)
+    echo 'Watched buffer: ' . bufname(bufnr)
+  elseif action ==# 'unwatch'
+    if !has_key(s:watching, bufnr)
+      echo 'Buffer is not watched'
+      return
+    endif
+    call s:unwatch(bufnr)
+    let name = bufname(bufnr)
+    echo 'Unwatched buffer' . (name !=# '' ? ': ' . name : '.')
+  elseif action ==# 'update'
+    if has_key(s:watching, bufnr)
+      call s:unwatch(bufnr)
+    endif
+    call s:watch(bufnr, win_getid(), opt)
     echo 'Updated watch info.'
   endif
 endfunction
 
-function! s:watch(bufnr, winid, period) abort
+function! s:watch(bufnr, winid, opt) abort
   let s:watching[a:bufnr] = {
   \ 'bufnr': a:bufnr,
   \ 'winid': a:winid,
-  \ 'switch': v:false,
+  \ 'switch': a:opt.switch,
   \ 'linecount': getbufinfo(a:bufnr)[0].linecount,
   \ 'lastline': getbufline(a:bufnr, '$')[0],
   \}
   let s:watching[a:bufnr].timer =
-  \ timer_start(a:period, function('s:check_output', [s:watching[a:bufnr]]), {'repeat': -1})
-  echo 'Watched buffer: ' . bufname(a:bufnr)
+  \ timer_start(a:opt.period, function('s:check_output', [s:watching[a:bufnr]]), {'repeat': -1})
 endfunction
 
 " vint: next-line -ProhibitUnusedVariable
@@ -77,6 +86,4 @@ endfunction
 function! s:unwatch(bufnr) abort
   let info = remove(s:watching, a:bufnr)
   call timer_stop(get(info, 'timer'))
-  let name = bufname(a:bufnr)
-  echo 'Unwatched buffer' . (name !=# '' ? ': ' . name : '.')
 endfunction
