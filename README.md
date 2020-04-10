@@ -1,8 +1,15 @@
 # notify-changed.vim
 
-Notify terminal buffer's changed lines with OS notification system (TODO: currently macOS only)
+Notify terminal buffer's changed lines with OS notification system.
 
 ![macOS notification](https://user-images.githubusercontent.com/48169/78953099-aa98f480-7b12-11ea-8ada-95260247cf77.png)
+![Windows notification](https://user-images.githubusercontent.com/48169/78960371-d3c47f80-7b28-11ea-8b44-3d1695a588df.png)
+
+## Supported platform
+
+* macOS
+* Windows
+* Linux (notify-send)
 
 ## Usage
 
