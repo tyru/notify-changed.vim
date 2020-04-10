@@ -2,7 +2,7 @@ scriptencoding utf-8
 
 let s:watching = {}
 
-let s:OPTS = ['-switch', '-no-switch', '-unwatch']
+let s:OPTS = ['-switch', '-no-switch', '-unwatch', '-period']
 function! notify_changed#complete(arglead, ...) abort
   let opts = copy(s:OPTS)
   if a:arglead !=# ''
@@ -19,15 +19,24 @@ function! notify_changed#command(args) abort
   else
     let opt = {'switch': v:false, 'period': 3000}
   endif
-  for arg in a:args
+  let i = 0
+  while i < len(a:args)
+    let arg = a:args[i]
     if arg ==# '-switch'
       let opt.switch = v:true
     elseif arg ==# '-no-switch'
       let opt.switch = v:false
     elseif arg ==# '-unwatch'
       let action = 'unwatch'
+    elseif arg ==# '-period'
+      let p = s:parse_period(a:args[i+1])
+      if p isnot v:null
+        let opt.period = p
+      endif
+      let i += 1
     endif
-  endfor
+    let i += 1
+  endwhile
   let action = action ==# 'watch' && has_key(s:watching, bufnr) ? 'update' : action
   if action ==# 'watch'
     call s:watch(bufnr, win_getid(), opt)
@@ -47,6 +56,20 @@ function! notify_changed#command(args) abort
     call s:watch(bufnr, win_getid(), opt)
     echo 'Updated watch info.'
   endif
+endfunction
+
+function! s:parse_period(str) abort
+  for [pat, l:F] in [
+  \ ['\v^(\d+)s(ec)?$', {m -> +(m[1] * 1000)}],
+  \ ['\v^(\d+)m%[sec]?$', {m -> +m[1]}],
+  \ ['\v^(\d+)$', {m -> +m[1]}],
+  \]
+    let m = matchlist(a:str, pat)
+    if !empty(m)
+      return l:F(m)
+    endif
+  endfor
+  return v:null
 endfunction
 
 function! s:watch(bufnr, winid, opt) abort
