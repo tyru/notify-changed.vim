@@ -120,7 +120,8 @@ endfunction
 function! s:truncate_arg(str) abort
   let str = strcharpart(a:str, 0, 100)
   let str = escape(str, '"')
-  return str
+  let converted = iconv(str, &encoding, 'char')
+  return converted !=# '' ? converted : str
 endfunction
 
 function! s:unwatch(bufnr) abort
