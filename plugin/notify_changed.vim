@@ -7,14 +7,17 @@ if v:version < 801
   finish
 endif
 
-if has("mac")
-  let default_command = 'osascript -e "display notification" "%s"'
-elseif has("linux")
-  let default_command = 'notify-send "%s"'
-else
-  let default_command = ''
+if !exists('g:notify_changed_command')
+  if has('mac')
+    let g:notify_changed_command = ['osascript', '-e', 'display notification "{{msg}}" with title "{{title}}"']
+  elseif has('linux')
+    let g:notify_changed_command = ['notify-send', '"{{msg}}" with title "{{title}}"']
+  else
+    echohl ErrorMsg
+    echomsg 'notify-changed: Your platform is not supported.'
+    echohl None
+    finish
+  endif
 endif
-
-let g:notify_changed_command = get(g:, "notify_changed_command", default_command)
 
 command! -nargs=* -complete=customlist,notify_changed#complete NotifyChanged call notify_changed#command([<f-args>])

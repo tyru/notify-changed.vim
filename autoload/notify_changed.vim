@@ -97,14 +97,24 @@ function! s:check_output(info, _) abort
     let difflines = getbufline(a:info.bufnr, start, linecount)
     let msg = s:truncate_arg(join(difflines))
     let title = s:truncate_arg(bufname(a:info.bufnr))
-    let sendmsg = printf("%s with title %s", msg, title)
-    call job_start(printf(g:notify_changed_command, sendmsg))
+    let command = s:build_command(g:notify_changed_command, msg, title)
+    call job_start(command)
     if a:info.switch
       call win_gotoid(a:info.winid)
     endif
   endif
   let a:info.linecount = linecount
   let a:info.lastline = lastline
+endfunction
+
+function! s:build_command(fmt, msg, title) abort
+  return map(copy(a:fmt), 's:embed(v:val, a:msg, a:title)')
+endfunction
+
+function! s:embed(str, msg, title) abort
+  let str = substitute(a:str, '{{msg}}', a:msg, 'g')
+  let str = substitute(str, '{{title}}', a:title, 'g')
+  return str
 endfunction
 
 function! s:truncate_arg(str) abort
