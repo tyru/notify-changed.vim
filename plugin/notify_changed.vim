@@ -7,4 +7,14 @@ if v:version < 801
   finish
 endif
 
+if has("mac")
+  let default_command = 'osascript -e "display notification" "%s"'
+elseif has("linux")
+  let default_command = 'notify-send "%s"'
+else
+  let default_command = ''
+endif
+
+let g:notify_changed_command = get(g:, "notify_changed_command", default_command)
+
 command! -nargs=* -complete=customlist,notify_changed#complete NotifyChanged call notify_changed#command([<f-args>])

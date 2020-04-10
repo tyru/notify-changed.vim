@@ -97,7 +97,8 @@ function! s:check_output(info, _) abort
     let difflines = getbufline(a:info.bufnr, start, linecount)
     let msg = s:truncate_arg(join(difflines))
     let title = s:truncate_arg(bufname(a:info.bufnr))
-    call job_start(['osascript', '-e', 'display notification "' . msg . '" with title "' . title . '"'])
+    let sendmsg = printf("%s with title %s", msg, title)
+    call job_start(printf(g:notify_changed_command, sendmsg))
     if a:info.switch
       call win_gotoid(a:info.winid)
     endif
