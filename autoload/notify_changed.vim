@@ -92,12 +92,11 @@ function! s:check_output(info, _) abort
   let linecount = getbufinfo(a:info.bufnr)[0].linecount
   let lastline = getbufline(a:info.bufnr, '$')[0]
   if a:info.linecount !=# linecount || a:info.lastline !=# lastline
-    " TODO notify changed lines
     " TODO support windows and linux
     let start = a:info.linecount + (a:info.lastline !=# lastline ? 0 : 1)
     let difflines = getbufline(a:info.bufnr, start, linecount)
-    let msg = s:escape_arg(join(difflines))
-    let title = s:escape_arg(bufname(a:info.bufnr))
+    let msg = s:truncate_arg(join(difflines))
+    let title = s:truncate_arg(bufname(a:info.bufnr))
     call job_start(['osascript', '-e', 'display notification "' . msg . '" with title "' . title . '"'])
     if a:info.switch
       call win_gotoid(a:info.winid)
@@ -107,7 +106,7 @@ function! s:check_output(info, _) abort
   let a:info.lastline = lastline
 endfunction
 
-function! s:escape_arg(str) abort
+function! s:truncate_arg(str) abort
   let str = strcharpart(a:str, 0, 100)
   let str = escape(str, '"')
   return str
