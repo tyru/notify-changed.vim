@@ -1,0 +1,59 @@
+*notify_changed.txt*	Notify changed lines using OS notification system
+
+Author: tyru <tyru.exe@gmail.com>
+Copyright (C) 2020-2020 tyru <tyru.exe@gmail.com>
+Licence: MIT license  {{{
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+==============================================================================
+CONTENTS					*notify_changed-contents*
+
+REQUIREMENTS			|notify_changed-requirements|
+INTRODUCTION			|notify_changed-introduction|
+INTERFACE			|notify_changed-interface|
+  COMMANDS			|notify_changed-commands|
+
+==============================================================================
+REQUIREMENTS					*notify_changed-requirements*
+
+* Vim 8.1+
+
+==============================================================================
+INTRODUCTION					*notify_changed-introduction*
+
+*notify-changed* notifies terminal buffer's changed lines with OS notification system.
+(TODO: currently macOS only)
+
+==============================================================================
+INTERFACE					*notify_changed-interface*
+
+COMMANDS					*notify_changed-commands*
+--------
+
+						*:NotifyChanged*
+:NotifyChanged [-unwatch] [-switch] [-no-switch] [-period {period}]
+
+	* `-unwatch`: Unregister watch timer
+	* `-switch`, `-no-switch`: Switch to the terminal window if changed (or not)
+	* `-period {period}`: specify the period for timer (e.g. `{period}` = `10s`, `1000m`, `1000` (same as `1000m`))
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:noet
