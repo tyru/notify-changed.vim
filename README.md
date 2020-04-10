@@ -2,8 +2,8 @@
 
 Notify terminal buffer's changed lines with OS notification system.
 
-![macOS notification](https://user-images.githubusercontent.com/48169/78953099-aa98f480-7b12-11ea-8ada-95260247cf77.png)
-![Windows notification](https://user-images.githubusercontent.com/48169/78960371-d3c47f80-7b28-11ea-8b44-3d1695a588df.png)
+<img alt='macOS notification' src='https://user-images.githubusercontent.com/48169/78953099-aa98f480-7b12-11ea-8ada-95260247cf77.png' width='382'>
+<img alt='Windows notification' src='https://user-images.githubusercontent.com/48169/78960964-aaa4ee80-7b2a-11ea-87c8-dc6cc38d9914.png'>
 
 ## Supported platform
 
