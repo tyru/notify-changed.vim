@@ -77,7 +77,7 @@ function! s:watch(bufnr, winid, opt) abort
   \ 'bufnr': a:bufnr,
   \ 'winid': a:winid,
   \ 'switch': a:opt.switch,
-  \ 'linecount': getbufinfo(a:bufnr)[0].linecount,
+  \ 'linecount': s:get_linecount(a:bufnr),
   \ 'lastline': getbufline(a:bufnr, '$')[0],
   \}
   let s:watching[a:bufnr].timer =
@@ -89,7 +89,7 @@ function! s:check_output(info, _) abort
   if win_id2tabwin(a:info.winid) ==# [0, 0]
     return
   endif
-  let linecount = getbufinfo(a:info.bufnr)[0].linecount
+  let linecount = s:get_linecount(a:info.bufnr)
   let lastline = getbufline(a:info.bufnr, '$')[0]
   if a:info.linecount !=# linecount || a:info.lastline !=# lastline
     let start = a:info.linecount + (a:info.lastline !=# lastline ? 0 : 1)
@@ -97,7 +97,7 @@ function! s:check_output(info, _) abort
     let msg = s:truncate_arg(join(difflines))
     let title = s:truncate_arg(bufname(a:info.bufnr))
     let command = s:build_command(g:notify_changed_command, msg, title)
-    call job_start(command)
+    call s:run_background(command)
     if a:info.switch
       call win_gotoid(a:info.winid)
     endif
@@ -105,6 +105,28 @@ function! s:check_output(info, _) abort
   let a:info.linecount = linecount
   let a:info.lastline = lastline
 endfunction
+
+if has('nvim')
+  function! s:run_background(command) abort
+    call jobstart(a:command)
+  endfunction
+  if has('nvim-0.5')
+    function! s:get_linecount(bufnr) abort
+      return getbufinfo(a:bufnr)[0].linecount
+    endfunction
+  else
+    function! s:get_linecount(bufnr) abort
+      return len(getbufline(a:bufnr, 1, '$'))
+    endfunction
+  endif
+else
+  function! s:run_background(command) abort
+    call job_start(a:command)
+  endfunction
+  function! s:get_linecount(bufnr) abort
+    return getbufinfo(a:bufnr)[0].linecount
+  endfunction
+endif
 
 function! s:build_command(fmt, msg, title) abort
   return map(copy(a:fmt), 's:embed(v:val, a:msg, a:title)')

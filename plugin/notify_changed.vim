@@ -1,8 +1,8 @@
 scriptencoding utf-8
 
-if v:version < 801
+if v:version < 800 && !has('nvim')
   echohl ErrorMsg
-  echomsg 'notify-changed: This plugin requires Vim 8.1 or higher'
+  echomsg 'notify-changed: This plugin requires Vim 8+ or Neovim (v0.5+ is recommended)'
   echohl None
   finish
 endif
