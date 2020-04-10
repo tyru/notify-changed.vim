@@ -2,8 +2,13 @@ scriptencoding utf-8
 
 let s:watching = {}
 
-function! notify_changed#complete() abort
-  return ['-switch', '-no-switch', '-unwatch']
+let s:OPTS = ['-switch', '-no-switch', '-unwatch']
+function! notify_changed#complete(arglead, ...) abort
+  let opts = copy(s:OPTS)
+  if a:arglead !=# ''
+    return filter(opts, 'stridx(v:val, a:arglead) ==# 0')
+  endif
+  return opts
 endfunction
 
 function! notify_changed#command(args) abort
