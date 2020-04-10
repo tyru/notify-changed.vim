@@ -92,7 +92,6 @@ function! s:check_output(info, _) abort
   let linecount = getbufinfo(a:info.bufnr)[0].linecount
   let lastline = getbufline(a:info.bufnr, '$')[0]
   if a:info.linecount !=# linecount || a:info.lastline !=# lastline
-    " TODO support windows and linux
     let start = a:info.linecount + (a:info.lastline !=# lastline ? 0 : 1)
     let difflines = getbufline(a:info.bufnr, start, linecount)
     let msg = s:truncate_arg(join(difflines))
