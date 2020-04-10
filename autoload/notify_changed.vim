@@ -14,7 +14,11 @@ endfunction
 function! notify_changed#command(args) abort
   let bufnr = bufnr('')
   let action = 'watch'
-  let opt = {'switch': v:false, 'period': 3000}
+  if has_key(s:watching, bufnr)
+    let opt = {'switch': s:watching[bufnr].switch, 'period': 3000}
+  else
+    let opt = {'switch': v:false, 'period': 3000}
+  endif
   for arg in a:args
     if arg ==# '-switch'
       let opt.switch = v:true
@@ -72,6 +76,9 @@ function! s:check_output(info, _) abort
     let msg = s:escape_arg(join(difflines))
     let title = s:escape_arg(bufname(a:info.bufnr))
     call job_start(['osascript', '-e', 'display notification "' . msg . '" with title "' . title . '"'])
+    if a:info.switch
+      call win_gotoid(a:info.winid)
+    endif
   endif
   let a:info.linecount = linecount
   let a:info.lastline = lastline
