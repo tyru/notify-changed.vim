@@ -10,10 +10,10 @@ endif
 if !exists('g:notify_changed_command')
   if has('mac')
     let g:notify_changed_command = ['osascript', '-e', 'display notification "{{msg}}" with title "{{title}}"']
-  elseif has('linux')
-    let g:notify_changed_command = ['notify-send', '"{{msg}}" with title "{{title}}"']
   elseif has('win32')
     let g:notify_changed_command = ['powershell', '-NoProfile', '-ExecutionPolicy', 'Unrestricted', '-Command', '& ' . expand('<sfile>:h:h') . '/macros/notify.ps1 "{{title}}" "{{msg}}"']
+  elseif executable('notify-send')
+    let g:notify_changed_command = ['notify-send', '"{{msg}}" with title "{{title}}"']
   else
     echohl ErrorMsg
     echomsg 'notify-changed: Your platform is not supported.'
