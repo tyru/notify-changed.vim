@@ -8,9 +8,11 @@ Notify terminal buffer's changed lines with OS notification system.
 
 ## Supported platform
 
-* macOS
-* Windows
-* Linux (notify-send)
+* Vim 8+ or Neovim (0.5+ recommended) 
+* OS
+  * macOS
+  * Windows
+  * Linux (notify-send)
 
 ## Usage
 
