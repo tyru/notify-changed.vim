@@ -34,7 +34,13 @@ INTERFACE			|notify_changed-interface|
 ==============================================================================
 REQUIREMENTS					*notify_changed-requirements*
 
-* Vim 8.1+
+* Vim 8+ or Neovim (0.5+ recommended) 
+
+Supported platforms are:
+
+* macOS
+* Windows
+* Linux (notify-send)
 
 ==============================================================================
 INTRODUCTION					*notify_changed-introduction*
