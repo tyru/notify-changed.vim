@@ -129,6 +129,9 @@ else
 endif
 
 function! s:build_command(fmt, msg, title) abort
+  if type(a:fmt) is type('')
+    return s:embed(a:fmt, a:msg, a:title)
+  endif
   return map(copy(a:fmt), 's:embed(v:val, a:msg, a:title)')
 endfunction
 
