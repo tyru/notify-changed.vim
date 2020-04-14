@@ -14,6 +14,7 @@ Supported platforms are:
 
 * macOS
 * Windows
+* WSL
 * Linux (notify-send)
 
 ## Usage
