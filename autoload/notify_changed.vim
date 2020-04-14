@@ -133,9 +133,37 @@ function! s:build_command(fmt, msg, title) abort
 endfunction
 
 function! s:embed(str, msg, title) abort
-  let str = substitute(a:str, '{{msg}}', a:msg, 'g')
-  let str = substitute(str, '{{title}}', a:title, 'g')
+  let str = s:gsub(a:str, '{{msg}}', a:msg)
+  let str = s:gsub(str, '{{title}}', a:title)
+  let str = s:gsub(str, '{{notify}}', s:notify_cmd)
+  if s:is_wsl()
+    let str = s:gsub(str, '{{notify_wslpath}}', s:notify_wslpath())
+  endif
   return str
+endfunction
+
+" replace string by substring, not pattern
+function! s:gsub(str, needle, replace) abort
+  return substitute(a:str, '\C' . a:needle, '\=' . string(a:replace), 'g')
+endfunction
+
+let s:notify_cmd = expand('<sfile>:h:h') . '/macros/notify.ps1'
+function! s:notify_wslpath() abort
+  if exists('s:notify_cmd_wslpath')
+    return s:notify_cmd_wslpath
+  endif
+  let s:notify_cmd_wslpath = s:wslpath('-w', s:notify_cmd)
+  return s:notify_cmd_wslpath
+endfunction
+
+function! s:wslpath(...) abort
+  let cmd = join(['wslpath'] + map(copy(a:000), 'shellescape(v:val)'))
+  return trim(system(cmd))
+endfunction
+
+function! s:is_wsl() abort
+  return filereadable('/proc/sys/kernel/osrelease') &&
+  \ join(readfile('/proc/sys/kernel/osrelease'), "\n") =~? 'Microsoft'
 endfunction
 
 function! s:truncate_arg(str) abort
