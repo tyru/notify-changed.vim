@@ -28,4 +28,4 @@ This registers / updates / unregister (`-unwatch`) watch timer by given options
 
 * `-unwatch`: Unregister watch timer
 * `-switch`, `-no-switch`: Switch to the terminal window if changed (or not)
-* `-period {period}`: specify the period for timer (e.g. `{period}` = `10s`, `1000m`, `1000` (same as `1000m`))
+* `-period {period}`: specify the period for timer (e.g. `{period}` = `10s`, `1000m`, `10` (same as `10s`))

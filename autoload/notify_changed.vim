@@ -62,7 +62,7 @@ function! s:parse_period(str) abort
   for [pat, l:F] in [
   \ ['\v^(\d+)s(ec)?$', {m -> +(m[1] * 1000)}],
   \ ['\v^(\d+)m%[sec]?$', {m -> +m[1]}],
-  \ ['\v^(\d+)$', {m -> +m[1]}],
+  \ ['\v^(\d+)$', {m -> +(m[1] * 1000)}],
   \]
     let m = matchlist(a:str, pat)
     if !empty(m)
